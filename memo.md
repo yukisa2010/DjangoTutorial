@@ -22,7 +22,7 @@ source /usr/local/bin/virtualenvwrapper.sh
 - paizaサーバー
 
 ## アプリ立ち上げ
-- django-admin startproject django-website
+- django-admin startproject django_website
     - Rails でいうrails new .
 
 ## serverの起動コマンド
