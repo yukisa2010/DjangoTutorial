@@ -217,7 +217,7 @@ INSTALLED_APPS = [
 - Defaultが「UTC」になっているのでdjango_website/setting.pyを修正
     - TIME_ZONE = 'Asia/Tokyo'
 
-## デバックモード」の外し方
+## デバックモード」の外し方・WhiteNoiseの導入
 - website/staticfilesフォルダの追加
 - django_website/setting.pyへの変更
 ```python
@@ -230,7 +230,54 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompresserManifestStaticFilesStorage'
 'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ```
-- command: python manage.py collectstaticefiles
+static内のファイルを全てstaticfilesへコピー
+- command: python manage.py collectstatic
+
+- whitenoise
+    - 静的ファイル導入のため
+## サーバー構成
+本番設定の構成例
+- Django x 3 + whitenoise
+- APサーバー(gunicom)
+- Webサーバー(リバースプロキシ・Nginx)
+
+- AmazonS3(静的ファイルサーバー)
+
+## STATICの設定
+- STATIC_URL
+    - AmazonS3の場合
+        - STATIC_URL = 'http://amazon~'
+    - WhiteNoiseの場合
+        - STATIC_URL = '/assets/' # 自由に変更可能
+
+- STATIC_ROOT
+    - python manage.py collectstaticを実行した際の保存先
+
+# Djangoを本番サーバーに公開する
+- Heroku
+    - Githubと連携し、デプロイできるサービス
+    - 必要なもの
+        - requirements.txt 
+            - ライブラリ一覧のこと
+            - プロジェクト直下に作成
+            - 下記入力
+                ```
+                django
+                whitenoise
+                gunicorn
+                ```
+        - Procfile >> gunicornの起動コマンド
+            - 下記を記述(django_website\wsgi.pyを起動)
+                ```
+                web: gunicorn django_website.wsgi
+                ```
+    - 手順
+        1. Herokuでプロジェクト立ち上げ
+        2. Githubにプロジェクトをアップロード
+        3. 1.,2.を連携
+
+
+
 
 
 
