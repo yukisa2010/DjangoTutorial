@@ -104,8 +104,137 @@ urlpatterns = [
 > ## Linuxコマンド
 >- cp A Bでコピー
 >- rm -r A でディレクトリごと削除
-
+> ## Github
+> - Error対応
+>   - git config --global user.name "yukisa2010"
+>   - git config --global user.email yukisa2010@gmail.com
 
 # Djangoテンプレートビュー
+
+## 共通の要素を配置することができる
+
+- _navbar.html > 共通で使用するテンプレート
+```html
+<div class='navbar'>
+    <a href='/'>TOP</a>
+    <a href='/about'>自己紹介</a>
+</div>
+```
+- index.html > テンプレートの配置先へ記述
+```html
+{% include '_navbar.html' %}
+```
+
+## CSSの配置
+- templateフォルダにcssを入れても使えない。<br>
+まずはstaticフォルダを作成し、中にcssファイルを作成。
+
+```html
+{% load static %} <!--HTML行頭に追加しないと使えない-->
+
+<head>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+</head>
+```
+
+> エラー対処
+> - キャッシュが残っており、CSSが再読み込みできなかった。サーバーを切断し、接続し直すと無事成功。
+
+## block, base
+- HTMLの共通部分をテンプレート化することができる。
+    - 書き換えたい部分だけ{% block %}で囲めばOK
+
+- base.html
+```html
+<body>
+    {% include "_navbar.html" %}
+
+    {% block main %}
+    コンテンツがありません。
+    {% endblock %}
+
+    {% include "_footer.html" %}
+</body>
+```
+- index.html
+```html
+{% extends 'base.html' %}
+{% block main %}
+<h1>Hello, World</h1>
+{% endblock %}
+```
+## 画像
+- CSSと同様にstaticフォルダの中
+- {% load static %}を忘れない
+
+## 変数
+- {{ username }} - HTMLに記述
+- views.py
+    - IndexView等のclassの中に記述
+    - 書き方は下記の通りで決まっている
+    - TemplateViewの継承。Djangoが用意している
+
+```python
+class IndexView(TemplateView):
+    template_name = 'index.html'
+
+    def get_context_data(self):
+        ctxt = super().get_context_data()
+        ctxt['username'] = "ガッキー"
+        return ctxt
+
+```
+## カンマ区切り
+- HTMLファイル
+```html
+{% load humanize %}
+
+<p>これまでに{{ num_services | intcomma }}個のサービスを作りました！</p>
+```
+- django_website/setting.py
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize', # <<追加
+    'website',
+]
+```
+## 条件分岐
+```html
+{% if %}
+{% elif %}
+{% else %}
+{% endif %}
+```
+
+## 現在時刻
+- {% now "Y年m月d日 H時i分" %}
+- Defaultが「UTC」になっているのでdjango_website/setting.pyを修正
+    - TIME_ZONE = 'Asia/Tokyo'
+
+## デバックモード」の外し方
+- website/staticfilesフォルダの追加
+- django_website/setting.pyへの変更
+```python
+# デバッグモードを外す
+DEBUG = False
+## ファイル末尾へ追加
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompresserManifestStaticFilesStorage'
+# Middlewareの項目に下記を追加
+'whitenoise.middleware.WhiteNoiseMiddleware',
+
+```
+- command: python manage.py collectstaticefiles
+
+
+
+
+
 
 
