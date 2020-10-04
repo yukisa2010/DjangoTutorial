@@ -303,7 +303,13 @@ static内のファイルを全てstaticfilesへコピー
     mysql -u root -p # 2回目以降ログイン
     ```
     - .envファイル作成
-
+    ```
+    DATABASE_URL=mysql://root:password@localhost/pj_db
+    ```
+    - コマンド実行
+    ```
+    python manage.py migrate
+    ```
 
 
 
