@@ -276,9 +276,33 @@ static内のファイルを全てstaticfilesへコピー
         2. Githubにプロジェクトをアップロード
         3. 1.,2.を連携
 
-
-
-
+## DB Serverとの接続
+- sqlite
+    - 実体はテキストファイル
+    - リスクあるので本番サーバーで使用することはない
+    - 少人数など
+    - 使用方法
+        - 何も指定せず、以下のコマンドを実行
+        ```python
+        python manage.py migrate
+        python manage.py createsuperuser
+        ```
+- MySQL
+    - 以下をインストール
+    ```python
+    pip install dj-database-url
+    pip install python-dotenv
+    ```
+    - MySQL用ライブラリインストール
+    ```
+    pip install mysqlclient
+    mysql -u root
+    mysql>ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
+    mysql>CREATE DATABASE dj_db;
+    mysql>exit
+    mysql -u root -p # 2回目以降ログイン
+    ```
+    - .envファイル作成
 
 
 
