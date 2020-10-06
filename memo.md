@@ -343,5 +343,5 @@ static内のファイルを全てstaticfilesへコピー
     psycopg2-binary
     mysqlclient
     ```
-
+    - $ pip install -r requirements.txt 一気にインストール
 
