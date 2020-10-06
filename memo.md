@@ -309,9 +309,22 @@ static内のファイルを全てstaticfilesへコピー
     - コマンド実行
     ```
     python manage.py migrate
+    python manage.py createsuperuser
     ```
+- PostgreSQL
+    - ライブラリ・インストール
+    ```
+    pip install psycopg2-binary
+    ```
+    - =>うまくいかない。以下、試したこと
+        ```terminal
+        brew install postgresql
+        pip install psycopg2
+        # おまじない
+        ln -s /usr/local/Cellar/openssl/1.0.2e/lib/libssl.1.0.0.dylib /usr/local/lib
+        ln -s /usr/local/Cellar/openssl/1.0.2e/lib/libcrypto.1.0.0.dylib /usr/local/lib
 
-
+        ```
 
 
 
