@@ -320,11 +320,28 @@ static内のファイルを全てstaticfilesへコピー
         ```terminal
         brew install postgresql
         pip install psycopg2
-        # おまじない
-        ln -s /usr/local/Cellar/openssl/1.0.2e/lib/libssl.1.0.0.dylib /usr/local/lib
-        ln -s /usr/local/Cellar/openssl/1.0.2e/lib/libcrypto.1.0.0.dylib /usr/local/lib
+            => エラー出た。ググって解決
 
+        # postgreSQLサーバーの起動
+        pg_ctl start -D /usr/local/var/postgres
+        # DB接続
+        psql -d postgres -U apple -h localhost
+        # 参考URL
+        https://qiita.com/Shitimi_613/items/bcd6a7f4134e6a8f0621
+        https://qiita.com/Shitimi_613/items/bcd6a7f4134e6a8f0621
         ```
-
+    - サーバー起動 $ pg_ctl start -D /usr/local/var/postgres
+    - $ python manage.py migrate
+    - $ python manage.py createsuperuser
+    - requirements.txt
+    ```
+    django
+    whitenoise
+    gunicorn
+    dj-database-url
+    python-dotenv
+    psycopg2-binary
+    mysqlclient
+    ```
 
 
