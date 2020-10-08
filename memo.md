@@ -343,5 +343,117 @@ static内のファイルを全てstaticfilesへコピー
     psycopg2-binary
     mysqlclient
     ```
-    - $ pip install -r requirements.txt 一気にインストール
+    - $ pip install -r requirements.txt
+        - ファイル内に記述されたライブラリを一気にインストール
+    - githubへpush
+    - herokuで下記を実行
+        - $ python manage.py migrate
+        - $ python manage.py createsuperuser
 
+# Model
+- blog/models.pyへ記述
+```python
+class Category(models.Model):
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+        unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class Tag(models.Model):
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+        unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class Post(models.Model):
+    created = models.DateTimeField(
+        auto_now_add=True,
+        editable=False,
+        blank=False,
+        null=False)
+    
+    updated = models.DateTimeField(
+        auto_now=True,
+        editable=False,
+        blank=False,
+        null=False)
+        
+    title = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False)
+        
+    body = models.TextField(
+        blank=True,
+        null=False)
+        
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE)
+        
+    tags = models.ManyToManyField(
+        Tag,
+        blank=True)
+
+    def __str__(self):
+        return self.title
+```
+- INSTALLED_APPSへのプロジェクト名の追加
+    - データベースへ追加するためのプログラム生成
+    - まだDBへは書き込まれていない
+    ```
+    python manage.py makemigrations blog
+    ```
+    - DBへの追加
+    ```
+    python manage.py migrate
+    ```
+- django shell
+    - django shell
+    ```python
+    # 開始
+    python manage.py shell
+
+    # import
+    from blog.models import Category, Tag, Post
+    # Insert
+    Category.objects.create(name="cat 1")
+    # 全件表示
+    Category.objects.all()
+    # 代入
+    cat = Category.objects.first()
+    # Field Value表示
+    cat.name
+    # 新規レコード作成
+    post = Post()
+    post.title = 'post 1' # 必要なフィールドを埋める
+    post.save()
+    # M to M へのデータ追加
+    post.tags.first()
+    tag1 = Tag.objects.create(name='tag 1')
+    tag2 = Tag.objects.create(name='tag 2')
+    post.save()
+
+    post.tags.add(tag1)
+    # <Many to Many>.all()
+    post.tags.all()    
+
+    # 検索
+    Category.objects.filter(name='cat 1')
+    Category.objects.filter(name='cat 1').first()
+
+    # 閉じる
+    exit
+    ```
+
+# 
